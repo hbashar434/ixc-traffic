@@ -1,36 +1,16 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Traffic Monitoring
 
-## Getting Started
+🚦 **Traffic Monitoring** is a fun and friendly project designed to make network traffic analysis easier! Whether you're keeping an eye on traffic quality, monitoring key metrics like ASR and ACD, or ensuring your traffic is on the right route, this tool helps simplify the process.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- 🖥️ **Real-Time Monitoring**: Track live network traffic and get insights as data flows.
+- 📊 **Traffic Health Indicators**: Quickly determine if traffic is **working well** or **experiencing issues**.
+- 🛣️ **Route Monitoring**: Ensure traffic is flowing through the correct routes and adjust if necessary.
+- 📈 **ASR & ACD Metrics**: Easily visualize **ASR (Answer-Seizure Ratio)** and **ACD (Average Call Duration)** to gauge traffic quality.
+- ⏱️ **Latency Alerts**: Get notified when network latency spikes, so you can react quickly.
+- 🔄 **Historical Data**: Analyze past traffic data to spot trends, issues, and improvements.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Why We Built It
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+We built this tool to **make life easier** for network engineers and anyone handling traffic monitoring. With clear, real-time data and simple-to-use features, you'll always know when traffic is flowing smoothly, or if there are bottlenecks to fix. Whether it's for fun or work, this tool keeps you informed and stress-free.
