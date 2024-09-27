@@ -2,6 +2,7 @@
 
 import { useState, ChangeEvent } from "react";
 import * as XLSX from "xlsx";
+// import { countryCodes } from "@/utils/constant";
 import DataTable from "./DataTable";
 
 interface FileData {
@@ -38,8 +39,7 @@ const FileUpload: React.FC = () => {
 
           const jsonData = XLSX.utils.sheet_to_json(worksheet);
 
-          // Remove the last row
-          jsonData.pop(); // This removes the last row from the JSON data
+          jsonData.pop();
 
           setFileData(jsonData as FileData[]);
         };
@@ -59,7 +59,7 @@ const FileUpload: React.FC = () => {
     }
   };
 
-  console.log(fileData);
+  console.log("data", fileData);
 
   return (
     <div className="p-6">
