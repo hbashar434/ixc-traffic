@@ -55,9 +55,9 @@ const FileUpload: React.FC = () => {
             );
 
             if (countryCodeKey) {
-              row["Country Code"] = countryCodes[countryCodeKey];
+              row["Code"] = countryCodes[countryCodeKey];
             } else {
-              row["Country Code"] = "Unknown"; // Handle unmatched countries
+              row["Code"] = "False";
             }
 
             return row;
