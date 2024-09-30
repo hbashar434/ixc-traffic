@@ -39,17 +39,16 @@ const FileUpload: React.FC = () => {
 
           const jsonData = XLSX.utils.sheet_to_json(worksheet);
 
-          // Remove the last row if it is empty
           jsonData.pop();
 
-          // Process the file data and normalize country names
           const processedData = (jsonData as FileData[]).map((row) => {
+            delete row["#"];
+
             const country = ((row["Country"] as string) || "")
               .trim()
               .split(" ")[0]
-              .toLowerCase(); // Take the first word and make it lowercase
+              .toLowerCase();
 
-            // Match the country code by ignoring case sensitivity
             const countryCodeKey = Object.keys(countryCodes).find(
               (key) => key.toLowerCase().split(" ")[0] === country
             );
@@ -60,7 +59,10 @@ const FileUpload: React.FC = () => {
               row["Code"] = "False";
             }
 
-            return row;
+            return {
+              Code: row["Code"],
+              ...row,
+            };
           });
 
           setFileData(processedData);

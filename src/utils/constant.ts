@@ -110,6 +110,7 @@ export const countryCodes: { [key: string]: string } = {
   Mauritania: "222",
   Mauritius: "230",
   Macau: "853",
+  Macedonia: "389",
   Mexico: "52",
   Micronesia: "691",
   Moldova: "373",

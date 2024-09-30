@@ -5,13 +5,12 @@ interface DataTableProps {
 }
 
 const DataTable: React.FC<DataTableProps> = ({ data }) => {
-  // Define an array of colors for the columns
   const columnColors = [
-    "bg-red-100", // 1st column
-    "bg-green-100", // 2nd column
-    "bg-blue-100", // 3rd column
-    "bg-yellow-100", // 4th column
-    "bg-purple-100", // 5th column, etc.
+    "bg-green-100",
+    "bg-blue-100",
+    "bg-yellow-100",
+    "bg-purple-100",
+    // You can add more colors here if needed
   ];
 
   return (
@@ -31,20 +30,26 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
           </tr>
         </thead>
         <tbody>
-          {data.map((row, rowIndex) => (
-            <tr key={rowIndex} className="border-b border-gray-300">
-              {Object.values(row).map((value, colIndex) => (
-                <td
-                  key={colIndex}
-                  className={`border border-gray-300 px-4 py-2 ${
-                    columnColors[colIndex % columnColors.length] // Apply color based on column index
-                  }`}
-                >
-                  {value}
-                </td>
-              ))}
-            </tr>
-          ))}
+          {data.map((row, rowIndex) => {
+            const codeValue = row["Code"];
+
+            return (
+              <tr key={rowIndex} className="border-b border-gray-300">
+                {Object.values(row).map((value, colIndex) => (
+                  <td
+                    key={colIndex}
+                    className={`border border-gray-300 px-4 py-2 ${
+                      codeValue === "False" && colIndex === 0
+                        ? "bg-red-600 text-white font-semibold"
+                        : columnColors[colIndex % columnColors.length]
+                    }`}
+                  >
+                    {value}
+                  </td>
+                ))}
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>
