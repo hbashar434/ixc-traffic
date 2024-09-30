@@ -7,9 +7,9 @@ interface DataTableProps {
 const DataTable: React.FC<DataTableProps> = ({ data }) => {
   // Define an array of colors for the columns
   const columnColors = [
-    "bg-red-100",    // 1st column
-    "bg-green-100",  // 2nd column
-    "bg-blue-100",   // 3rd column
+    "bg-red-100", // 1st column
+    "bg-green-100", // 2nd column
+    "bg-blue-100", // 3rd column
     "bg-yellow-100", // 4th column
     "bg-purple-100", // 5th column, etc.
   ];
@@ -22,7 +22,7 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
             {data.length > 0 &&
               Object.keys(data[0]).map((key, idx) => (
                 <th
-                  key={key}
+                  key={idx}
                   className="border border-gray-300 px-4 py-2 text-left"
                 >
                   {key}
