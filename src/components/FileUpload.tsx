@@ -2,7 +2,6 @@
 
 import { useState, ChangeEvent } from "react";
 import * as XLSX from "xlsx";
-// import { countryCodes } from "@/utils/constant";
 import DataTable from "./DataTable";
 
 interface FileData {
@@ -37,11 +36,29 @@ const FileUpload: React.FC = () => {
           const sheetName = workbook.SheetNames[0];
           const worksheet = workbook.Sheets[sheetName];
 
-          const jsonData = XLSX.utils.sheet_to_json(worksheet);
+          const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
 
-          jsonData.pop();
+          // Transform jsonData from array of arrays to array of objects
+          const headers = jsonData[0] as string[];
+          const rows = jsonData.slice(1) as any[];
 
-          setFileData(jsonData as FileData[]);
+          const transformedData = rows.map((row: any[]) => {
+            const rowData: FileData = {};
+
+            // Add "code" as the first element in the row (0 index)
+            rowData["code"] = row[0];
+
+            // Add the rest of the headers and values
+            headers.forEach((header, index) => {
+              if (index > 0) {
+                rowData[header === "#" ? "code" : header] = row[index];
+              }
+            });
+
+            return rowData;
+          });
+
+          setFileData(transformedData as FileData[]);
         };
 
         reader.readAsArrayBuffer(file);
@@ -58,8 +75,6 @@ const FileUpload: React.FC = () => {
       setError("Please upload a file before analyzing.");
     }
   };
-
-  console.log("data", fileData);
 
   return (
     <div className="p-6">
