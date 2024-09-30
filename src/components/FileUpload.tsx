@@ -2,6 +2,7 @@
 
 import { useState, ChangeEvent } from "react";
 import * as XLSX from "xlsx";
+import { countryCodes } from "@/utils/constant";
 import DataTable from "./DataTable";
 
 interface FileData {
@@ -36,29 +37,33 @@ const FileUpload: React.FC = () => {
           const sheetName = workbook.SheetNames[0];
           const worksheet = workbook.Sheets[sheetName];
 
-          const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+          const jsonData = XLSX.utils.sheet_to_json(worksheet);
 
-          // Transform jsonData from array of arrays to array of objects
-          const headers = jsonData[0] as string[];
-          const rows = jsonData.slice(1) as any[];
+          // Remove the last row if it is empty
+          jsonData.pop();
 
-          const transformedData = rows.map((row: any[]) => {
-            const rowData: FileData = {};
+          // Process the file data and normalize country names
+          const processedData = (jsonData as FileData[]).map((row) => {
+            const country = ((row["Country"] as string) || "")
+              .trim()
+              .split(" ")[0]
+              .toLowerCase(); // Take the first word and make it lowercase
 
-            // Add "code" as the first element in the row (0 index)
-            rowData["code"] = row[0];
+            // Match the country code by ignoring case sensitivity
+            const countryCodeKey = Object.keys(countryCodes).find(
+              (key) => key.toLowerCase().split(" ")[0] === country
+            );
 
-            // Add the rest of the headers and values
-            headers.forEach((header, index) => {
-              if (index > 0) {
-                rowData[header === "#" ? "code" : header] = row[index];
-              }
-            });
+            if (countryCodeKey) {
+              row["Country Code"] = countryCodes[countryCodeKey];
+            } else {
+              row["Country Code"] = "Unknown"; // Handle unmatched countries
+            }
 
-            return rowData;
+            return row;
           });
 
-          setFileData(transformedData as FileData[]);
+          setFileData(processedData);
         };
 
         reader.readAsArrayBuffer(file);
