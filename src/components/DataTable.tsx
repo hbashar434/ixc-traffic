@@ -6,7 +6,7 @@ interface DataTableProps {
 
 const DataTable: React.FC<DataTableProps> = ({ data }) => {
   const columnColors = [
-    "bg-green-100",
+    "bg-emerlad-100",
     "bg-blue-100",
     "bg-yellow-100",
     "bg-purple-100",
