@@ -12,7 +12,7 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
     "bg-purple-100",
     "bg-indigo-100",
     "bg-sky-100",
-    "bg-cyan-100"
+    "bg-cyan-100",
     // You can add more colors here if needed
   ];
 
