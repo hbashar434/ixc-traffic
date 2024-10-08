@@ -1,40 +1,54 @@
 import { useState } from "react";
 import DataTable from "./DataTable"; // Import your existing DataTable component
 
+interface DataItem {
+  [key: string]: string | number;
+}
+
 interface TabsProps {
-  data: Array<{ [key: string]: string | number }>;
+  data: DataItem[];
 }
 
 const Tabs: React.FC<TabsProps> = ({ data }) => {
   const [activeTab, setActiveTab] = useState<string | null>(null); // Default no active tab
 
-  // Function to filter data based on the selected tab
+  // Function to filter and sort data based on the selected tab
   const filterData = () => {
-    if (activeTab === null) {
-      return data; // Show all data if no tab is active
-    }
+    let filteredData: DataItem[] = data;
 
     switch (activeTab) {
       case "Unknown":
-        return data.filter((item) => item["Code"] === "False");
+        // Check if the Operator field contains the string "unknown"
+        filteredData = data.filter(
+          (item) =>
+            typeof item["Operator"] === "string" &&
+            item["Operator"].toLowerCase().includes("unknown")
+        );
+        break;
       case "Low ASR":
-        return data.filter((item) => {
+        filteredData = data.filter((item) => {
           const asrValue = Number(item["ASR"]); // Convert to number
           return asrValue < 0.5; // Adjust threshold as needed
         });
+        break;
       case "Low ACD":
-        return data.filter((item) => {
+        filteredData = data.filter((item) => {
           const acdValue = Number(item["ACD"]); // Convert to number
           return acdValue < 1; // Adjust threshold as needed
         });
+        break;
       case "High PDD":
-        return data.filter((item) => {
+        filteredData = data.filter((item) => {
           const pddValue = Number(item["PDD"]); // Convert to number
           return pddValue > 5; // Adjust threshold as needed
         });
+        break;
       default:
-        return data;
+        return data; // Return all data if no tab is active
     }
+
+    // Sort filtered data by Count in descending order
+    return filteredData.sort((a, b) => Number(b["Count"]) - Number(a["Count"]));
   };
 
   // Filtered data based on the active tab
@@ -58,7 +72,7 @@ const Tabs: React.FC<TabsProps> = ({ data }) => {
           </button>
         ))}
         <button
-          onClick={() => setActiveTab(null)}
+          onClick={() => setActiveTab(null)} // Reset active tab to show all data
           className={`px-4 py-2 rounded-lg ${
             activeTab === null
               ? "bg-blue-500 text-white"
