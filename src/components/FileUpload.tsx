@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, ChangeEvent } from "react";
+import { useState, useEffect, ChangeEvent } from "react";
 import * as XLSX from "xlsx";
 import { countryCodes } from "@/utils/constant";
 import DataTable from "./DataTable";
@@ -14,6 +14,14 @@ const FileUpload: React.FC = () => {
   const [error, setError] = useState<string>("");
   const [showTable, setShowTable] = useState<boolean>(false);
   const [fileName, setFileName] = useState<string>("");
+
+  // Retrieve file data from localStorage on component mount
+  useEffect(() => {
+    const storedData = localStorage.getItem("fileData");
+    if (storedData) {
+      setFileData(JSON.parse(storedData));
+    }
+  }, []);
 
   const handleFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -39,7 +47,7 @@ const FileUpload: React.FC = () => {
 
           const jsonData = XLSX.utils.sheet_to_json(worksheet);
 
-          jsonData.pop();
+          jsonData.pop(); // Remove any extra rows (like totals)
 
           const processedData = (jsonData as FileData[]).map((row) => {
             delete row["#"];
@@ -65,6 +73,10 @@ const FileUpload: React.FC = () => {
             };
           });
 
+          // Store the processed data in localStorage
+          localStorage.setItem("fileData", JSON.stringify(processedData));
+
+          // Update the state with the processed data
           setFileData(processedData);
         };
 
