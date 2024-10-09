@@ -19,7 +19,7 @@ const HomePage = () => {
       <Navbar />
       <FileUpload />
       {fileData.length > 0 && (
-        <div className="mt-6">
+        <div className="mt-8">
           <Tabs data={fileData} />
         </div>
       )}
