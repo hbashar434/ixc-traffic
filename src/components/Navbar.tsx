@@ -19,12 +19,18 @@ const Navbar: React.FC = () => {
     { name: "Settings", path: "/" },
   ];
 
+  // Function to delete data (clear local storage)
+  const handleDeleteData = () => {
+    localStorage.clear(); // Clear local storage
+    alert("Data removed from local storage!"); // Optional: Alert the user
+  };
+
   return (
     <nav className="bg-blue-600 p-4">
       <div className="container mx-auto flex justify-between items-center">
         <div className="text-white text-2xl font-bold">Traffic Monitor</div>
 
-        <div className="hidden md:flex space-x-6 text-white">
+        <div className="hidden md:flex items-center space-x-6 text-white">
           {routes.map((route) => (
             <Link
               key={route.name}
@@ -34,6 +40,13 @@ const Navbar: React.FC = () => {
               {route.name}
             </Link>
           ))}
+          {/* Delete Button */}
+          <button
+            onClick={handleDeleteData}
+            className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition"
+          >
+            Delete
+          </button>
         </div>
 
         <div className="md:hidden">
@@ -70,6 +83,13 @@ const Navbar: React.FC = () => {
               {route.name}
             </Link>
           ))}
+          {/* Delete Button for Mobile */}
+          <button
+            onClick={handleDeleteData}
+            className="bg-indigo-600 text-white px-4 py-2 rounded block hover:bg-indigo-700 transition"
+          >
+            Delete
+          </button>
         </div>
       )}
     </nav>
