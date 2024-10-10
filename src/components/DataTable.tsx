@@ -18,7 +18,7 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
   }
 
   if (data.length === 0) {
-    return <div>No records to display</div>;
+    return <div className="text-center">No records to display</div>;
   }
 
   return (
