@@ -11,8 +11,6 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
     "bg-yellow-100",
     "bg-purple-100",
     "bg-indigo-100",
-    "bg-sky-100",
-    "bg-cyan-100",
   ];
 
   if (!data || !Array.isArray(data)) {
