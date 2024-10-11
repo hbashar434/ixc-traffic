@@ -18,7 +18,7 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
   }
 
   if (data.length === 0) {
-    return <div className="text-center">No records to display</div>;
+    return <div className="text-center mt-2">No records to display!</div>;
   }
 
   return (
@@ -42,8 +42,12 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
 
             return (
               <tr key={rowIndex} className="border-b border-gray-300">
-                {Object.values(row).map((value, colIndex) => {
+                {Object.entries(row).map(([key, value], colIndex) => {
                   const isCodeFalse = codeValue === "False" && colIndex === 0;
+
+                  // Format ASR as a percentage
+                  const formattedValue =
+                    key === "ASR" ? `${(value as number) * 100}%` : value;
 
                   return (
                     <td
@@ -54,7 +58,7 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
                           : columnColors[colIndex % columnColors.length]
                       }`}
                     >
-                      {value}
+                      {formattedValue}
                     </td>
                   );
                 })}
