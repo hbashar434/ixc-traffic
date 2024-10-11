@@ -49,7 +49,6 @@ const Tabs: React.FC<TabsProps> = ({ data }) => {
         const acdValue = item.ACD as number;
         const countValue = item.Count as number;
 
-        // Check for keywords in Originator and compare ACD value
         for (const [keyword, threshold] of Object.entries(keywordValues)) {
           if (
             originator.includes(keyword) &&
@@ -59,9 +58,8 @@ const Tabs: React.FC<TabsProps> = ({ data }) => {
             return true; // It's considered low ACD and Count > 50
           }
         }
-        return false; // Not low ACD or Count <= 50
+        return false;
       })
-      // Sort the filtered data by Count in descending order
       .sort((a, b) => (b.Count as number) - (a.Count as number));
 
     setFilteredData(lowAcdData);
@@ -71,15 +69,27 @@ const Tabs: React.FC<TabsProps> = ({ data }) => {
   // Function to handle 0 ACD/ASR filtering and sorting by Count
   const handleZeroAcdAsrData = () => {
     const zeroAcdAsrData = data
-      .filter((item) => item.ACD === 0 || item.ASR === 0) // Check for ACD or ASR = 0
-      .sort((a, b) => (b.Count as number) - (a.Count as number)); // Sort by Count in descending order
+      .filter((item) => item.ACD === 0 || item.ASR === 0)
+      .sort((a, b) => (b.Count as number) - (a.Count as number));
 
     setFilteredData(zeroAcdAsrData);
-    setActiveTab("zero_acd/asr");
+    setActiveTab("zero_acd_asr");
+  };
+
+  // Function to handle low ASR filtering and sorting by Count
+  const handleLowAsrData = () => {
+    const lowAsrData = data
+      .filter(
+        (item) => (item.ASR as number) < 0.1 && (item.Count as number) > 50
+      )
+      .sort((a, b) => (b.Count as number) - (a.Count as number));
+
+    setFilteredData(lowAsrData);
+    setActiveTab("low_asr");
   };
 
   // List of tab names
-  const tabNames = ["unknown", "low_acd", "zero_acd/asr"];
+  const tabNames = ["unknown", "low_acd", "zero_acd_asr", "low_asr"];
 
   return (
     <section>
@@ -92,7 +102,9 @@ const Tabs: React.FC<TabsProps> = ({ data }) => {
                 ? handleUnknownData
                 : tab === "low_acd"
                 ? handleLowAcdData
-                : handleZeroAcdAsrData
+                : tab === "zero_acd_asr"
+                ? handleZeroAcdAsrData
+                : handleLowAsrData // Handle the new "LOW ASR" tab
             }
             className={`px-4 py-2 rounded ${
               activeTab === tab ? "bg-indigo-700" : "bg-indigo-600"
