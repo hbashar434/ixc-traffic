@@ -68,8 +68,18 @@ const Tabs: React.FC<TabsProps> = ({ data }) => {
     setActiveTab("low_acd");
   };
 
+  // Function to handle 0 ACD/ASR filtering and sorting by Count
+  const handleZeroAcdAsrData = () => {
+    const zeroAcdAsrData = data
+      .filter((item) => item.ACD === 0 || item.ASR === 0) // Check for ACD or ASR = 0
+      .sort((a, b) => (b.Count as number) - (a.Count as number)); // Sort by Count in descending order
+
+    setFilteredData(zeroAcdAsrData);
+    setActiveTab("zero_acd/asr");
+  };
+
   // List of tab names
-  const tabNames = ["unknown", "low_acd"];
+  const tabNames = ["unknown", "low_acd", "zero_acd/asr"];
 
   return (
     <section>
@@ -77,12 +87,18 @@ const Tabs: React.FC<TabsProps> = ({ data }) => {
         {tabNames.map((tab) => (
           <button
             key={tab}
-            onClick={tab === "unknown" ? handleUnknownData : handleLowAcdData}
+            onClick={
+              tab === "unknown"
+                ? handleUnknownData
+                : tab === "low_acd"
+                ? handleLowAcdData
+                : handleZeroAcdAsrData
+            }
             className={`px-4 py-2 rounded ${
               activeTab === tab ? "bg-indigo-700" : "bg-indigo-600"
             } text-white hover:bg-indigo-500 transition`}
           >
-            {tab.charAt(0).toUpperCase() + tab.slice(1).replace("_", " ")}
+            {tab.replace("_", " ").toUpperCase()}
           </button>
         ))}
       </div>
