@@ -88,8 +88,26 @@ const Tabs: React.FC<TabsProps> = ({ data }) => {
     setActiveTab("low_asr");
   };
 
+  // Function to handle high PDD filtering and sorting by Count
+  const handleHighPddData = () => {
+    const highPddData = data
+      .filter(
+        (item) => (item.PDD as number) > 10 && (item.Count as number) > 50
+      )
+      .sort((a, b) => (b.Count as number) - (a.Count as number));
+
+    setFilteredData(highPddData);
+    setActiveTab("high_pdd");
+  };
+
   // List of tab names
-  const tabNames = ["unknown", "low_acd", "zero_acd_asr", "low_asr"];
+  const tabNames = [
+    "unknown",
+    "low_acd",
+    "low_asr",
+    "high_pdd",
+    "zero_acd_asr",
+  ];
 
   return (
     <section>
@@ -104,7 +122,9 @@ const Tabs: React.FC<TabsProps> = ({ data }) => {
                 ? handleLowAcdData
                 : tab === "zero_acd_asr"
                 ? handleZeroAcdAsrData
-                : handleLowAsrData // Handle the new "LOW ASR" tab
+                : tab === "low_asr"
+                ? handleLowAsrData
+                : handleHighPddData // Handle "HIGH PDD" tab
             }
             className={`px-4 py-2 rounded ${
               activeTab === tab ? "bg-indigo-700" : "bg-indigo-600"
