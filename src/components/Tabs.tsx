@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import DataTable from "./DataTable";
 
 interface DataItem {
@@ -9,9 +9,11 @@ interface TabsProps {
   data: DataItem[];
 }
 
-const Tabs: React.FC<TabsProps> = ({ data }) => {
+const TabsWithComparison: React.FC<TabsProps> = ({ data }) => {
   const [activeTab, setActiveTab] = useState<string | null>(null);
   const [filteredData, setFilteredData] = useState<DataItem[]>([]);
+  const [comparisonResults, setComparisonResults] = useState<DataItem[]>([]);
+  const [error, setError] = useState<string>("");
 
   useEffect(() => {
     if (data.length > 0) {
@@ -19,7 +21,7 @@ const Tabs: React.FC<TabsProps> = ({ data }) => {
     }
   }, [data]);
 
-  // Function to handle unknown data filtering
+  // Tab filtering functions (same as your previous code)
   const handleUnknownData = () => {
     const unknownData = data
       .filter(
@@ -33,7 +35,6 @@ const Tabs: React.FC<TabsProps> = ({ data }) => {
     setActiveTab("unknown");
   };
 
-  // Function to handle low ACD filtering with additional Count > 50 logic
   const handleLowAcdData = () => {
     const keywordValues: { [key: string]: number } = {
       CC: 0.05,
@@ -66,7 +67,6 @@ const Tabs: React.FC<TabsProps> = ({ data }) => {
     setActiveTab("low_acd");
   };
 
-  // Function to handle 0 ACD/ASR filtering and sorting by Count
   const handleZeroAcdAsrData = () => {
     const zeroAcdAsrData = data
       .filter((item) => item.ACD === 0 || item.ASR === 0)
@@ -76,7 +76,6 @@ const Tabs: React.FC<TabsProps> = ({ data }) => {
     setActiveTab("zero_acd_asr");
   };
 
-  // Function to handle low ASR filtering and sorting by Count
   const handleLowAsrData = () => {
     const lowAsrData = data
       .filter(
@@ -88,7 +87,6 @@ const Tabs: React.FC<TabsProps> = ({ data }) => {
     setActiveTab("low_asr");
   };
 
-  // Function to handle high PDD filtering and sorting by Count
   const handleHighPddData = () => {
     const highPddData = data
       .filter(
@@ -100,7 +98,87 @@ const Tabs: React.FC<TabsProps> = ({ data }) => {
     setActiveTab("high_pdd");
   };
 
-  // List of tab names
+  // Function to handle file comparison
+  const oldFileData = localStorage.getItem("ixcOldFile");
+  const newFileData = localStorage.getItem("ixcNewFile");
+
+  const handleCompareFiles = () => {
+    if (!oldFileData || !newFileData) {
+      setError("Both old and new files need to be uploaded before comparison.");
+      return;
+    }
+
+    setError(""); // Clear previous error messages
+    const oldData: DataItem[] = JSON.parse(oldFileData);
+    const newData: DataItem[] = JSON.parse(newFileData);
+
+    const comparisonResults = newData.map((newRow) => {
+      const matchingOldRow = oldData.find(
+        (oldRow) =>
+          oldRow.Code === newRow.Code &&
+          oldRow.Originator === newRow.Originator &&
+          oldRow.Operator === newRow.Operator &&
+          oldRow.Country === newRow.Country
+      );
+
+      if (matchingOldRow) {
+        // Comparison logic
+        const compareValue = (newVal: number, oldVal: number) => {
+          const diff = newVal - oldVal;
+          return diff > 0
+            ? `Increase (${diff})`
+            : diff < 0
+            ? `Decrease (${Math.abs(diff)})`
+            : "Same";
+        };
+
+        const compareWithoutValue = (newVal: number, oldVal: number) => {
+          return newVal > oldVal
+            ? "Increase"
+            : newVal < oldVal
+            ? "Decrease"
+            : "Same";
+        };
+
+        return {
+          ...newRow,
+          "Minute Res": compareWithoutValue(
+            newRow["Minute dur"] as number,
+            matchingOldRow["Minute dur"] as number
+          ),
+          "Count Res": compareValue(
+            newRow.Count as number,
+            matchingOldRow.Count as number
+          ), // Only Count shows value
+          "ACD Res": compareWithoutValue(
+            newRow.ACD as number,
+            matchingOldRow.ACD as number
+          ),
+          "ASR Res": compareWithoutValue(
+            newRow.ASR as number,
+            matchingOldRow.ASR as number
+          ),
+          "PDD Res": compareWithoutValue(
+            newRow.PDD as number,
+            matchingOldRow.PDD as number
+          ),
+        };
+      } else {
+        return {
+          ...newRow,
+          "Minute Res": "New",
+          "Count Res": "New",
+          "ACD Res": "New",
+          "ASR Res": "New",
+          "PDD Res": "New",
+        };
+      }
+    });
+
+    setComparisonResults(comparisonResults);
+  };
+
+  // Tabs logic remains unchanged
   const tabNames = [
     "unknown",
     "low_acd",
@@ -111,6 +189,16 @@ const Tabs: React.FC<TabsProps> = ({ data }) => {
 
   return (
     <section>
+      {/* Compare Files Button */}
+      {oldFileData && newFileData && (
+        <button
+          onClick={handleCompareFiles}
+          className="mb-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 flex flex-col items-center w-full max-w-lg mx-auto text-center"
+        >
+          Compare With Previous Data
+        </button>
+      )}
+      {/* Tabs */}
       <div className="flex justify-center space-x-4 mb-4">
         {tabNames.map((tab) => (
           <button
@@ -135,9 +223,21 @@ const Tabs: React.FC<TabsProps> = ({ data }) => {
         ))}
       </div>
 
-      {activeTab && <DataTable data={filteredData} />}
+      {error && (
+        <div className="mt-2 text-red-500 flex flex-col items-center w-full max-w-lg mx-auto text-center">
+          <p>{error}</p>
+        </div>
+      )}
+
+      {/* Show filtered data when a tab is active */}
+      {activeTab && filteredData.length > 0 && (
+        <DataTable data={filteredData} />
+      )}
+
+      {/* Show comparison results */}
+      {comparisonResults.length > 0 && <DataTable data={comparisonResults} />}
     </section>
   );
 };
 
-export default Tabs;
+export default TabsWithComparison;
