@@ -127,8 +127,8 @@ const Tabs: React.FC<TabsProps> = ({ data }) => {
                 : handleHighPddData // Handle "HIGH PDD" tab
             }
             className={`px-4 py-2 rounded ${
-              activeTab === tab ? "bg-indigo-700" : "bg-indigo-600"
-            } text-white hover:bg-indigo-500 transition`}
+              activeTab === tab ? "bg-blue-600" : "bg-blue-500"
+            } text-white hover:bg-blue-600 transition`}
           >
             {tab.replace("_", " ").toUpperCase()}
           </button>
