@@ -8,7 +8,7 @@ const HomePage = () => {
   const [fileData, setFileData] = useState<any[]>([]);
 
   useEffect(() => {
-    const storedData = localStorage.getItem("fileData");
+    const storedData = localStorage.getItem("ixcNewFile");
     if (storedData) {
       setFileData(JSON.parse(storedData));
     }

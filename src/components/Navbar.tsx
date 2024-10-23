@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import useCommon from "@/hooks/useCommon";
 
 interface Route {
   name: string;
@@ -10,7 +11,7 @@ interface Route {
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-
+  const { reload } = useCommon();
   // List of navigation routes
   const routes: Route[] = [
     { name: "Home", path: "/" },
@@ -21,8 +22,9 @@ const Navbar: React.FC = () => {
 
   // Function to delete data (clear local storage)
   const handleDeleteData = () => {
-    localStorage.clear(); // Clear local storage
-    alert("Data removed from local storage!"); // Optional: Alert the user
+    localStorage.clear();
+    alert("Data removed from local storage!");
+    reload();
   };
 
   return (

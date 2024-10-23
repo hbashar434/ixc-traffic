@@ -16,7 +16,6 @@ const FileUpload: React.FC = () => {
   // Retrieve both new and old file data from localStorage on component mount
   useEffect(() => {
     const storedNewFileData = localStorage.getItem("ixcNewFile");
-
     if (storedNewFileData) {
       setNewFileData(JSON.parse(storedNewFileData));
     }
@@ -70,7 +69,7 @@ const FileUpload: React.FC = () => {
             };
           });
 
-          // Move current ixcNewFile to ixcOldFile before updating with the new data
+          // Move current newFile to oldFile before updating with the new data
           if (newFileData) {
             localStorage.setItem("ixcOldFile", JSON.stringify(newFileData));
           }
