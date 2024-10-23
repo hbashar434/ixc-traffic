@@ -47,7 +47,9 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
 
                   // Format ASR as a percentage
                   const formattedValue =
-                    key === "ASR" ? `${(value as number) * 100}%` : value;
+                    key === "ASR"
+                      ? `${Math.round((value as number) * 100)}%`
+                      : value;
 
                   return (
                     <td
