@@ -1,5 +1,3 @@
-"use client";
-
 import { useState, useEffect, ChangeEvent } from "react";
 import * as XLSX from "xlsx";
 import { countryCodes } from "@/utils/constant";
@@ -10,16 +8,17 @@ interface FileData {
 }
 
 const FileUpload: React.FC = () => {
-  const [fileData, setFileData] = useState<FileData[] | null>(null);
+  const [newFileData, setNewFileData] = useState<FileData[] | null>(null);
   const [error, setError] = useState<string>("");
   const [showTable, setShowTable] = useState<boolean>(false);
   const [fileName, setFileName] = useState<string>("");
 
-  // Retrieve file data from localStorage on component mount
+  // Retrieve both new and old file data from localStorage on component mount
   useEffect(() => {
-    const storedData = localStorage.getItem("fileData");
-    if (storedData) {
-      setFileData(JSON.parse(storedData));
+    const storedNewFileData = localStorage.getItem("ixcNewFile");
+
+    if (storedNewFileData) {
+      setNewFileData(JSON.parse(storedNewFileData));
     }
   }, []);
 
@@ -29,7 +28,6 @@ const FileUpload: React.FC = () => {
     if (file) {
       const fileType = file.type;
       setError("");
-      setFileData(null);
       setFileName(file.name);
 
       if (
@@ -46,7 +44,6 @@ const FileUpload: React.FC = () => {
           const worksheet = workbook.Sheets[sheetName];
 
           const jsonData = XLSX.utils.sheet_to_json(worksheet);
-
           jsonData.pop(); // Remove any extra rows (like totals)
 
           const processedData = (jsonData as FileData[]).map((row) => {
@@ -73,11 +70,14 @@ const FileUpload: React.FC = () => {
             };
           });
 
-          // Store the processed data in localStorage
-          localStorage.setItem("fileData", JSON.stringify(processedData));
+          // Move current ixcNewFile to ixcOldFile before updating with the new data
+          if (newFileData) {
+            localStorage.setItem("ixcOldFile", JSON.stringify(newFileData));
+          }
 
-          // Update the state with the processed data
-          setFileData(processedData);
+          // Store the new file data
+          setNewFileData(processedData);
+          localStorage.setItem("ixcNewFile", JSON.stringify(processedData));
         };
 
         reader.readAsArrayBuffer(file);
@@ -88,7 +88,7 @@ const FileUpload: React.FC = () => {
   };
 
   const handleAnalyzeClick = () => {
-    if (fileData) {
+    if (newFileData) {
       setShowTable(true);
     } else {
       setError("Please upload a file before analyzing.");
@@ -155,7 +155,7 @@ const FileUpload: React.FC = () => {
         </div>
       )}
 
-      {showTable && fileData && <DataTable data={fileData} />}
+      {showTable && newFileData && <DataTable data={newFileData} />}
     </div>
   );
 };
