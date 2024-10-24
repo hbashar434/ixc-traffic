@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useEffect, ChangeEvent } from "react";
 import * as XLSX from "xlsx";
 import { countryCodes } from "@/utils/constant";

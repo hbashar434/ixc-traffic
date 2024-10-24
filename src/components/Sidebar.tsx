@@ -12,7 +12,7 @@ import {
 
 const Sidebar: React.FC = () => {
   return (
-    <div className="fixed top-0 left-0 h-screen w-64 bg-blue-600 text-white">
+    <div className="fixed top-0 left-0 h-screen w-52 bg-blue-600 text-white">
       <div className="p-4 text-2xl font-bold">Traffic</div>
       <nav className="mt-10">
         {/* Iterate over route groups and render them */}
