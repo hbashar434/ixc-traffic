@@ -1,28 +1,11 @@
-"use client";
-import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
-import FileUpload from "@/components/FileUpload";
-import Tabs from "@/components/Tabs";
+import Sidebar from "@/components/Sidebar";
 
 const HomePage = () => {
-  const [fileData, setFileData] = useState<any[]>([]);
-
-  useEffect(() => {
-    const storedData = localStorage.getItem("ixcNewFile");
-    if (storedData) {
-      setFileData(JSON.parse(storedData));
-    }
-  }, []);
-
   return (
     <section>
       <Navbar />
-      <FileUpload />
-      {fileData.length > 0 && (
-        <div className="mt-2">
-          <Tabs data={fileData} />
-        </div>
-      )}
+      <Sidebar />
     </section>
   );
 };
