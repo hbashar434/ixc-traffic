@@ -3,10 +3,6 @@ import Link from "next/link";
 import {
   FaTachometerAlt,
   FaChartLine,
-  FaBookOpen,
-  FaFire,
-  FaClipboardCheck,
-  FaPalette,
   FaCog,
   FaExclamationCircle,
   FaArrowDown,
@@ -77,17 +73,21 @@ const routeGroups = [
     ],
   },
   {
-    title: "Reports",
+    title: "Comparision",
     routes: [
-      { name: "Reports", path: "/reports", icon: <FaBookOpen /> },
-      { name: "Trending", path: "/trending", icon: <FaFire /> },
-    ],
-  },
-  {
-    title: "Tasks",
-    routes: [
-      { name: "Tasks", path: "/tasks", icon: <FaClipboardCheck /> },
-      { name: "Design", path: "/design", icon: <FaPalette /> },
+      { name: "Unknown", path: "/", icon: <FaTachometerAlt /> },
+      {
+        name: "Zero ACD/ASR",
+        path: "/analytics",
+        icon: <FaExclamationCircle />,
+      },
+      { name: "Low ACD", path: "/analytics/low-acd", icon: <FaArrowDown /> },
+      { name: "Low ASR", path: "/analytics/low-asr", icon: <FaChartLine /> },
+      {
+        name: "High PDD",
+        path: "/analytics/high-pdd",
+        icon: <FaExclamationCircle />,
+      },
     ],
   },
 ];
