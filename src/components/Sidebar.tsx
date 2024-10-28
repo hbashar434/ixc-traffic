@@ -56,13 +56,20 @@ export default Sidebar;
 
 // Define the groups and routes dynamically with new icons
 const routeGroups = [
+  // {
+  //   title: "Home"
+  // },
   {
     title: "Analytics",
     routes: [
-      { name: "Unknown", path: "/analytics", icon: <FaTachometerAlt /> },
+      {
+        name: "Unknown",
+        path: "/analytics/unknown",
+        icon: <FaTachometerAlt />,
+      },
       {
         name: "Zero ACD/ASR",
-        path: "/analytics",
+        path: "/analytics/zero-acd-asr",
         icon: <FaExclamationCircle />,
       },
       { name: "Low ACD", path: "/analytics/low-acd", icon: <FaArrowDown /> },
@@ -77,17 +84,21 @@ const routeGroups = [
   {
     title: "Comparision",
     routes: [
-      { name: "Unknown", path: "/", icon: <FaTachometerAlt /> },
+      {
+        name: "Unknown",
+        path: "/comparison/unknown",
+        icon: <FaTachometerAlt />,
+      },
       {
         name: "Zero ACD/ASR",
-        path: "/analytics",
+        path: "/comparison/zero-acd-asr",
         icon: <FaExclamationCircle />,
       },
-      { name: "Low ACD", path: "/analytics/low-acd", icon: <FaArrowDown /> },
-      { name: "Low ASR", path: "/analytics/low-asr", icon: <FaChartLine /> },
+      { name: "Low ACD", path: "/comparison/low-acd", icon: <FaArrowDown /> },
+      { name: "Low ASR", path: "/comparison/low-asr", icon: <FaChartLine /> },
       {
         name: "High PDD",
-        path: "/analytics/high-pdd",
+        path: "/comparison/high-pdd",
         icon: <FaExclamationCircle />,
       },
     ],
