@@ -26,7 +26,7 @@ const Sidebar: React.FC = () => {
                     <Link href={route.path}>
                       <div className="flex items-center p-2 hover:bg-indigo-600 rounded cursor-pointer">
                         <div className="mr-3">{route.icon}</div>
-                        {route.name}
+                        <p className="text-sm"> {route.name}</p>
                       </div>
                     </Link>
                   </li>
