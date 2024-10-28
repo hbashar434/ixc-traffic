@@ -11,21 +11,21 @@ interface FileData {
 
 const FileUpload: React.FC = () => {
   const [newFileData, setNewFileData] = useState<FileData[] | null>(null);
-  const [oldFileData, setOldFileData] = useState<FileData[] | null>(null); // State for old file data
+  const [oldFileData, setOldFileData] = useState<FileData[] | null>(null);
   const [error, setError] = useState<string>("");
   const [showTable, setShowTable] = useState<boolean>(false);
   const [fileName, setFileName] = useState<string>("");
-  const [isOldFileActive, setIsOldFileActive] = useState<boolean>(false); // State for Old File button
-  const [isLatestFileActive, setIsLatestFileActive] = useState<boolean>(false); // State for Latest File button
+  const [isOldFileActive, setIsOldFileActive] = useState<boolean>(false);
+  const [isLatestFileActive, setIsLatestFileActive] = useState<boolean>(false);
 
   useEffect(() => {
     const storedNewFileData = localStorage.getItem("ixcNewFile");
-    const storedOldFileData = localStorage.getItem("ixcOldFile"); // Fetch old file data from localStorage
+    const storedOldFileData = localStorage.getItem("ixcOldFile");
     if (storedNewFileData) {
       setNewFileData(JSON.parse(storedNewFileData));
     }
     if (storedOldFileData) {
-      setOldFileData(JSON.parse(storedOldFileData)); // Set old file data
+      setOldFileData(JSON.parse(storedOldFileData));
     }
   }, []);
 
@@ -72,10 +72,22 @@ const FileUpload: React.FC = () => {
             };
           });
 
-          if (isOldFileActive) {
+          // If no tabs are active, handle file data as specified
+          if (!isOldFileActive && !isLatestFileActive) {
+            if (newFileData) {
+              // Move existing new file to old file
+              setOldFileData(newFileData);
+              localStorage.setItem("ixcOldFile", JSON.stringify(newFileData));
+            }
+            // Set new file data
+            setNewFileData(processedData);
+            localStorage.setItem("ixcNewFile", JSON.stringify(processedData));
+          } else if (isOldFileActive) {
+            // If old file is active, replace old file data
             setOldFileData(processedData);
             localStorage.setItem("ixcOldFile", JSON.stringify(processedData));
-          } else if (isLatestFileActive) {
+          } else {
+            // If new file is active, replace new file data
             setNewFileData(processedData);
             localStorage.setItem("ixcNewFile", JSON.stringify(processedData));
           }
@@ -93,6 +105,12 @@ const FileUpload: React.FC = () => {
       setShowTable(true);
     } else if (isLatestFileActive && newFileData) {
       setShowTable(true);
+    } else if (!isOldFileActive && !isLatestFileActive) {
+      if (newFileData) {
+        setShowTable(true);
+      } else {
+        setError("Please upload a file before analyzing.");
+      }
     } else {
       setError("Please upload a file before analyzing.");
     }
@@ -101,21 +119,20 @@ const FileUpload: React.FC = () => {
   const toggleOldFile = () => {
     setIsOldFileActive(true);
     setIsLatestFileActive(false);
-    setFileName(""); // Clear file name when switching to Old File
-    setShowTable(false); // Reset table display
+    setFileName("");
+    setShowTable(false);
   };
 
   const toggleLatestFile = () => {
     setIsLatestFileActive(true);
     setIsOldFileActive(false);
-    setFileName(""); // Clear file name when switching to Latest File
-    setShowTable(false); // Reset table display
+    setFileName("");
+    setShowTable(false);
   };
 
   return (
     <div className="relative flex justify-center items-center p-6">
       <div className="flex flex-col items-center w-full max-w-lg">
-        {/* File Upload Section */}
         <label
           htmlFor="dropzone-file"
           className="flex flex-col items-center w-full p-5 mt-2 text-center bg-white border-2 border-gray-300 border-dashed cursor-pointer rounded-xl h-32"
@@ -176,13 +193,11 @@ const FileUpload: React.FC = () => {
           </div>
         )}
 
-        {/* Data Table */}
         {showTable && (newFileData || oldFileData) && (
           <DataTable data={newFileData ? newFileData : oldFileData || []} />
         )}
       </div>
 
-      {/* Buttons aligned to the right-center with absolute positioning, column-wise */}
       <div className="absolute top-1/2 right-0 transform -translate-y-1/2 flex flex-col space-y-4">
         <button
           onClick={toggleOldFile}
@@ -190,7 +205,7 @@ const FileUpload: React.FC = () => {
             isOldFileActive
               ? "bg-blue-500 text-white"
               : "bg-black bg-opacity-20 backdrop-blur-md text-blue-600"
-          }  rounded hover:bg-blue-600 hover:text-white`}
+          } rounded hover:bg-blue-600 hover:text-white`}
         >
           Old File
         </button>
@@ -200,7 +215,7 @@ const FileUpload: React.FC = () => {
             isLatestFileActive
               ? "bg-blue-500 text-white"
               : "bg-black bg-opacity-20 backdrop-blur-md text-blue-600"
-          }  rounded hover:bg-blue-600 hover:text-white`}
+          } rounded hover:bg-blue-600 hover:text-white`}
         >
           Latest File
         </button>
