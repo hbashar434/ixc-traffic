@@ -11,14 +11,21 @@ interface FileData {
 
 const FileUpload: React.FC = () => {
   const [newFileData, setNewFileData] = useState<FileData[] | null>(null);
+  const [oldFileData, setOldFileData] = useState<FileData[] | null>(null); // State for old file data
   const [error, setError] = useState<string>("");
   const [showTable, setShowTable] = useState<boolean>(false);
   const [fileName, setFileName] = useState<string>("");
+  const [isOldFileActive, setIsOldFileActive] = useState<boolean>(false); // State for Old File button
+  const [isLatestFileActive, setIsLatestFileActive] = useState<boolean>(false); // State for Latest File button
 
   useEffect(() => {
     const storedNewFileData = localStorage.getItem("ixcNewFile");
+    const storedOldFileData = localStorage.getItem("ixcOldFile"); // Fetch old file data from localStorage
     if (storedNewFileData) {
       setNewFileData(JSON.parse(storedNewFileData));
+    }
+    if (storedOldFileData) {
+      setOldFileData(JSON.parse(storedOldFileData)); // Set old file data
     }
   }, []);
 
@@ -65,12 +72,13 @@ const FileUpload: React.FC = () => {
             };
           });
 
-          if (newFileData) {
-            localStorage.setItem("ixcOldFile", JSON.stringify(newFileData));
+          if (isOldFileActive) {
+            setOldFileData(processedData);
+            localStorage.setItem("ixcOldFile", JSON.stringify(processedData));
+          } else if (isLatestFileActive) {
+            setNewFileData(processedData);
+            localStorage.setItem("ixcNewFile", JSON.stringify(processedData));
           }
-
-          setNewFileData(processedData);
-          localStorage.setItem("ixcNewFile", JSON.stringify(processedData));
         };
 
         reader.readAsArrayBuffer(file);
@@ -81,11 +89,27 @@ const FileUpload: React.FC = () => {
   };
 
   const handleAnalyzeClick = () => {
-    if (newFileData) {
+    if (isOldFileActive && oldFileData) {
+      setShowTable(true);
+    } else if (isLatestFileActive && newFileData) {
       setShowTable(true);
     } else {
       setError("Please upload a file before analyzing.");
     }
+  };
+
+  const toggleOldFile = () => {
+    setIsOldFileActive(true);
+    setIsLatestFileActive(false);
+    setFileName(""); // Clear file name when switching to Old File
+    setShowTable(false); // Reset table display
+  };
+
+  const toggleLatestFile = () => {
+    setIsLatestFileActive(true);
+    setIsOldFileActive(false);
+    setFileName(""); // Clear file name when switching to Latest File
+    setShowTable(false); // Reset table display
   };
 
   return (
@@ -153,15 +177,31 @@ const FileUpload: React.FC = () => {
         )}
 
         {/* Data Table */}
-        {showTable && newFileData && <DataTable data={newFileData} />}
+        {showTable && (newFileData || oldFileData) && (
+          <DataTable data={newFileData ? newFileData : oldFileData || []} />
+        )}
       </div>
 
       {/* Buttons aligned to the right-center with absolute positioning, column-wise */}
       <div className="absolute top-1/2 right-0 transform -translate-y-1/2 flex flex-col space-y-4">
-        <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+        <button
+          onClick={toggleOldFile}
+          className={`px-4 py-2 ${
+            isOldFileActive
+              ? "bg-blue-500 text-white"
+              : "bg-black bg-opacity-20 backdrop-blur-md text-blue-600"
+          }  rounded hover:bg-blue-600 hover:text-white`}
+        >
           Old File
         </button>
-        <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+        <button
+          onClick={toggleLatestFile}
+          className={`px-4 py-2 ${
+            isLatestFileActive
+              ? "bg-blue-500 text-white"
+              : "bg-black bg-opacity-20 backdrop-blur-md text-blue-600"
+          }  rounded hover:bg-blue-600 hover:text-white`}
+        >
           Latest File
         </button>
       </div>
