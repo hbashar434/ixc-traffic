@@ -48,7 +48,7 @@ const FileUpload: React.FC = () => {
           const sheetName = workbook.SheetNames[0];
           const worksheet = workbook.Sheets[sheetName];
           const jsonData = XLSX.utils.sheet_to_json(worksheet);
-          jsonData.pop(); // Remove any extra rows (like totals)
+          jsonData.pop();
 
           const processedData = (jsonData as FileData[]).map((row) => {
             delete row["#"];
@@ -72,22 +72,18 @@ const FileUpload: React.FC = () => {
             };
           });
 
-          // If no tabs are active, handle file data as specified
           if (!isOldFileActive && !isLatestFileActive) {
             if (newFileData) {
-              // Move existing new file to old file
               setOldFileData(newFileData);
               localStorage.setItem("ixcOldFile", JSON.stringify(newFileData));
             }
-            // Set new file data
+
             setNewFileData(processedData);
             localStorage.setItem("ixcNewFile", JSON.stringify(processedData));
           } else if (isOldFileActive) {
-            // If old file is active, replace old file data
             setOldFileData(processedData);
             localStorage.setItem("ixcOldFile", JSON.stringify(processedData));
           } else {
-            // If new file is active, replace new file data
             setNewFileData(processedData);
             localStorage.setItem("ixcNewFile", JSON.stringify(processedData));
           }
@@ -119,14 +115,12 @@ const FileUpload: React.FC = () => {
   const toggleOldFile = () => {
     setIsOldFileActive(true);
     setIsLatestFileActive(false);
-    setFileName("");
     setShowTable(false);
   };
 
   const toggleLatestFile = () => {
     setIsLatestFileActive(true);
     setIsOldFileActive(false);
-    setFileName("");
     setShowTable(false);
   };
 
@@ -178,7 +172,6 @@ const FileUpload: React.FC = () => {
           />
         </label>
 
-        {/* Analyze Button */}
         <button
           onClick={handleAnalyzeClick}
           className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 flex items-center justify-center w-full max-w-lg"
@@ -186,7 +179,6 @@ const FileUpload: React.FC = () => {
           Analyze
         </button>
 
-        {/* Error Message */}
         {error && (
           <div className="mt-2 text-red-500 text-center">
             <p>{error}</p>
