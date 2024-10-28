@@ -12,7 +12,9 @@ const Sidebar: React.FC = () => {
   return (
     <div className="fixed top-0 left-0 h-screen w-52 bg-blue-600 text-white flex flex-col justify-between">
       <div>
-        <div className="p-4 text-xl font-bold text-center">IXC Traffic</div>
+        <Link href={"/"}>
+          <div className="p-4 text-xl font-bold text-center">IXC Traffic</div>
+        </Link>
         <nav className="mt-10">
           {/* Iterate over route groups and render them */}
           {routeGroups.map((group, index) => (
@@ -57,7 +59,7 @@ const routeGroups = [
   {
     title: "Analytics",
     routes: [
-      { name: "Unknown", path: "/", icon: <FaTachometerAlt /> },
+      { name: "Unknown", path: "/analytics", icon: <FaTachometerAlt /> },
       {
         name: "Zero ACD/ASR",
         path: "/analytics",
