@@ -1,12 +1,12 @@
 "use client";
 
 import DataTable from "@/components/DataTable";
-import useAnalyze from "@/hooks/useAnalyze";
+import useCompare from "@/hooks/useCompare";
 
 const HighPDDData = () => {
-  const { highPDDData } = useAnalyze();
+  const { highPDDComparison } = useCompare();
 
-  return <DataTable data={highPDDData} />;
+  return <DataTable data={highPDDComparison} />;
 };
 
 export default HighPDDData;
