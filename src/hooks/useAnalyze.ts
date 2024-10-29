@@ -10,7 +10,7 @@ interface DataItem {
   [key: string]: any;
 }
 
-interface AnalyticsData {
+interface AnalyzeData {
   unknownData: DataItem[];
   zeroASRACDData: DataItem[];
   lowACDData: DataItem[];
@@ -18,8 +18,8 @@ interface AnalyticsData {
   highPDDData: DataItem[];
 }
 
-const useAnalytics = (): AnalyticsData => {
-  const [analyticsData, setAnalyticsData] = useState<AnalyticsData>({
+const useAnalyze = (): AnalyzeData => {
+  const [analyzeData, setAnalyzeData] = useState<AnalyzeData>({
     unknownData: [],
     zeroASRACDData: [],
     lowACDData: [],
@@ -76,7 +76,7 @@ const useAnalytics = (): AnalyticsData => {
         .filter((item) => (item.PDD ?? 0) > 10 && (item.Count ?? 0) > 50)
         .sort((a, b) => (b.Count ?? 0) - (a.Count ?? 0));
 
-      setAnalyticsData({
+      setAnalyzeData({
         unknownData,
         zeroASRACDData,
         lowACDData,
@@ -88,7 +88,7 @@ const useAnalytics = (): AnalyticsData => {
     fetchDataFromStorage();
   }, []);
 
-  return analyticsData;
+  return analyzeData;
 };
 
-export default useAnalytics;
+export default useAnalyze;
