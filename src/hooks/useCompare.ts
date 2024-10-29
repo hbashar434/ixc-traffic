@@ -9,6 +9,7 @@ interface DataItem {
   Count?: number;
   Code?: string;
   Country?: string;
+  Results?: string;
   [key: string]: any;
 }
 
@@ -42,7 +43,7 @@ const useCompare = (): ComparisonResult => {
       const oldData: DataItem[] = JSON.parse(oldDataRaw);
       const newData: DataItem[] = JSON.parse(newDataRaw);
 
-      // Comparison helper to avoid repeating logic
+      // Helper function for comparing values
       const compareValue = (newVal: number, oldVal: number) => {
         return newVal > oldVal
           ? `Increase (${newVal - oldVal})`
@@ -51,98 +52,54 @@ const useCompare = (): ComparisonResult => {
           : "Same (0)";
       };
 
-      // Comparison without thresholds
-      const unknownComparison = newData
-        .filter((item) => item.Operator?.toLowerCase() === "unknown")
-        .map((newRow) => {
-          const oldRow = oldData.find(
-            (old) =>
-              old.Code === newRow.Code &&
-              old.Originator === newRow.Originator &&
-              old.Operator === newRow.Operator &&
-              old.Country === newRow.Country
-          );
-          return {
-            ...newRow,
-            CountRes: oldRow
-              ? compareValue(newRow.Count as number, oldRow.Count as number)
-              : "New",
-          };
-        })
-        .sort((a, b) => (b.Count || 0) - (a.Count || 0)); // Sort high to low
+      // Dynamic comparison function
+      const performComparison = (
+        filterCondition: (newRow: DataItem) => boolean,
+        metricKey?: keyof DataItem
+      ) => {
+        return newData
+          .filter(filterCondition)
+          .map((newRow) => {
+            const oldRow = oldData.find(
+              (old) =>
+                old.Code === newRow.Code &&
+                old.Originator === newRow.Originator &&
+                old.Operator === newRow.Operator &&
+                old.Country === newRow.Country
+            );
 
-      const zeroASRACDComparison = newData
-        .filter((item) => item.ACD === 0 || item.ASR === 0)
-        .map((newRow) => {
-          const oldRow = oldData.find(
-            (old) =>
-              old.Code === newRow.Code &&
-              old.Originator === newRow.Originator &&
-              old.Operator === newRow.Operator &&
-              old.Country === newRow.Country
-          );
-          return {
-            ...newRow,
-            CountRes: oldRow
-              ? compareValue(newRow.Count as number, oldRow.Count as number)
-              : "New",
-          };
-        })
-        .sort((a, b) => (b.Count || 0) - (a.Count || 0)); // Sort high to low
+            // Check if we need to compare a specific metric or just the count
+            const result =
+              oldRow && metricKey
+                ? compareValue(
+                    newRow[metricKey] as number,
+                    oldRow[metricKey] as number
+                  )
+                : oldRow
+                ? compareValue(newRow.Count as number, oldRow.Count as number)
+                : "New";
 
-      const lowACDComparison = newData
-        .map((newRow) => {
-          const oldRow = oldData.find(
-            (old) =>
-              old.Code === newRow.Code &&
-              old.Originator === newRow.Originator &&
-              old.Operator === newRow.Operator &&
-              old.Country === newRow.Country
-          );
-          return {
-            ...newRow,
-            CountRes: oldRow
-              ? compareValue(newRow.Count as number, oldRow.Count as number)
-              : "New",
-          };
-        })
-        .sort((a, b) => (b.Count || 0) - (a.Count || 0)); // Sort high to low
+            return {
+              ...newRow,
+              Results: result,
+            };
+          })
+          .sort((a, b) => (b.Count || 0) - (a.Count || 0)); // Sort high to low
+      };
 
-      const lowASRComparison = newData
-        .map((newRow) => {
-          const oldRow = oldData.find(
-            (old) =>
-              old.Code === newRow.Code &&
-              old.Originator === newRow.Originator &&
-              old.Operator === newRow.Operator &&
-              old.Country === newRow.Country
-          );
-          return {
-            ...newRow,
-            CountRes: oldRow
-              ? compareValue(newRow.Count as number, oldRow.Count as number)
-              : "New",
-          };
-        })
-        .sort((a, b) => (b.Count || 0) - (a.Count || 0)); // Sort high to low
+      const unknownComparison = performComparison(
+        (newRow) => newRow.Operator?.toLowerCase() === "unknown"
+      );
 
-      const highPDDComparison = newData
-        .map((newRow) => {
-          const oldRow = oldData.find(
-            (old) =>
-              old.Code === newRow.Code &&
-              old.Originator === newRow.Originator &&
-              old.Operator === newRow.Operator &&
-              old.Country === newRow.Country
-          );
-          return {
-            ...newRow,
-            CountRes: oldRow
-              ? compareValue(newRow.Count as number, oldRow.Count as number)
-              : "New",
-          };
-        })
-        .sort((a, b) => (b.Count || 0) - (a.Count || 0)); // Sort high to low
+      const zeroASRACDComparison = performComparison(
+        (newRow) => newRow.ACD === 0 || newRow.ASR === 0
+      );
+
+      const lowACDComparison = performComparison(() => true, "ACD");
+
+      const lowASRComparison = performComparison(() => true, "ASR");
+
+      const highPDDComparison = performComparison(() => true, "PDD");
 
       setComparisonData({
         unknownComparison,
