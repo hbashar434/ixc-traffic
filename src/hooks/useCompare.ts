@@ -46,10 +46,10 @@ const useCompare = (): ComparisonResult => {
       // Helper function for comparing values
       const compareValue = (newVal: number, oldVal: number) => {
         return newVal > oldVal
-          ? `Increase(${newVal - oldVal})`
+          ? `Increase (${newVal - oldVal})`
           : newVal < oldVal
-          ? `Decrease(${oldVal - newVal})`
-          : "Same(0)";
+          ? `Decrease (${oldVal - newVal})`
+          : "Same (0)";
       };
 
       // Dynamic comparison function
@@ -79,33 +79,10 @@ const useCompare = (): ComparisonResult => {
                 ? compareValue(newRow.Count as number, oldRow.Count as number)
                 : "New";
 
-            // Format ACD, ASR, PDD to 3 decimal places only for relevant comparisons
-            const formattedRow = {
+            return {
               ...newRow,
               Results: result,
             };
-
-            // Only format ACD, ASR, and PDD for low and high comparisons
-            if (
-              metricKey === "ACD" ||
-              metricKey === "ASR" ||
-              metricKey === "PDD"
-            ) {
-              formattedRow.ACD =
-                newRow.ACD !== undefined
-                  ? parseFloat(newRow.ACD.toFixed(3))
-                  : undefined;
-              formattedRow.ASR =
-                newRow.ASR !== undefined
-                  ? parseFloat(newRow.ASR.toFixed(3))
-                  : undefined;
-              formattedRow.PDD =
-                newRow.PDD !== undefined
-                  ? parseFloat(newRow.PDD.toFixed(3))
-                  : undefined;
-            }
-
-            return formattedRow;
           })
           .sort((a, b) => (b.Count || 0) - (a.Count || 0)); // Sort high to low
       };
