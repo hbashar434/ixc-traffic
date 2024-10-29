@@ -1,12 +1,13 @@
 "use client";
 
 import DataTable from "@/components/DataTable";
-import useAnalyze from "@/hooks/useAnalyze";
+import useCompare from "@/hooks/useCompare";
 
 const UnknownData = () => {
-  const { unknownData } = useAnalyze();
+  const { unknownComparison } = useCompare();
+  console.log({ unknownComparison });
 
-  return <DataTable data={unknownData} />;
+  return <DataTable data={unknownComparison} />;
 };
 
 export default UnknownData;

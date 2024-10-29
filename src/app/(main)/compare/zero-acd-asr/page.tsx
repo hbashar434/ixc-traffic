@@ -1,10 +1,11 @@
 "use client";
 
 import DataTable from "@/components/DataTable";
-import useAnalyze from "@/hooks/useAnalyze";
+import useCompare from "@/hooks/useCompare";
+
 
 const ZeroASRACD = () => {
-  const { zeroASRACDData } = useAnalyze();
+  const { zeroASRACDData } = useCompare();
 
   return <DataTable data={zeroASRACDData} />;
 };

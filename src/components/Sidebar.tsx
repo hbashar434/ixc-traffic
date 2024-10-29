@@ -64,19 +64,19 @@ const routeGroups = [
     routes: [
       {
         name: "Unknown",
-        path: "/analytics/unknown",
+        path: "/analyze/unknown",
         icon: <FaTachometerAlt />,
       },
       {
         name: "Zero ACD/ASR",
-        path: "/analytics/zero-acd-asr",
+        path: "/analyze/zero-acd-asr",
         icon: <FaExclamationCircle />,
       },
-      { name: "Low ACD", path: "/analytics/low-acd", icon: <FaArrowDown /> },
-      { name: "Low ASR", path: "/analytics/low-asr", icon: <FaChartLine /> },
+      { name: "Low ACD", path: "/analyze/low-acd", icon: <FaArrowDown /> },
+      { name: "Low ASR", path: "/analyze/low-asr", icon: <FaChartLine /> },
       {
         name: "High PDD",
-        path: "/analytics/high-pdd",
+        path: "/analyze/high-pdd",
         icon: <FaExclamationCircle />,
       },
     ],
@@ -86,19 +86,19 @@ const routeGroups = [
     routes: [
       {
         name: "Unknown",
-        path: "/comparison/unknown",
+        path: "/compare/unknown",
         icon: <FaTachometerAlt />,
       },
       {
         name: "Zero ACD/ASR",
-        path: "/comparison/zero-acd-asr",
+        path: "/compare/zero-acd-asr",
         icon: <FaExclamationCircle />,
       },
-      { name: "Low ACD", path: "/comparison/low-acd", icon: <FaArrowDown /> },
-      { name: "Low ASR", path: "/comparison/low-asr", icon: <FaChartLine /> },
+      { name: "Low ACD", path: "/compare/low-acd", icon: <FaArrowDown /> },
+      { name: "Low ASR", path: "/compare/low-asr", icon: <FaChartLine /> },
       {
         name: "High PDD",
-        path: "/comparison/high-pdd",
+        path: "/compare/high-pdd",
         icon: <FaExclamationCircle />,
       },
     ],
