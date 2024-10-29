@@ -1,12 +1,12 @@
 "use client";
 
 import DataTable from "@/components/DataTable";
-import useAnalyze from "@/hooks/useAnalyze";
+import useCompare from "@/hooks/useCompare";
 
 const LowACDData = () => {
-  const { lowACDData } = useAnalyze();
+  const { lowACDComparison } = useCompare();
 
-  return <DataTable data={lowACDData} />;
+  return <DataTable data={lowACDComparison} />;
 };
 
 export default LowACDData;

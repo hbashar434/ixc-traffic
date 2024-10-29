@@ -4,9 +4,9 @@ import DataTable from "@/components/DataTable";
 import useCompare from "@/hooks/useCompare";
 
 const LowASRData = () => {
-  const { lowACDComparison } = useCompare();
+  const { lowASRComparison } = useCompare();
 
-  return <DataTable data={lowACDComparison} />;
+  return <DataTable data={lowASRComparison} />;
 };
 
 export default LowASRData;
