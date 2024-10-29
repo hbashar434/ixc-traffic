@@ -94,10 +94,10 @@ const routeGroups = [
         path: "/compare/zero-acd-asr",
         icon: <FaExclamationCircle />,
       },
-      { name: "Low ACD", path: "/compare/low-acd", icon: <FaArrowDown /> },
-      { name: "Low ASR", path: "/compare/low-asr", icon: <FaChartLine /> },
+      { name: "ACD", path: "/compare/low-acd", icon: <FaArrowDown /> },
+      { name: "ASR", path: "/compare/low-asr", icon: <FaChartLine /> },
       {
-        name: "High PDD",
+        name: "PDD",
         path: "/compare/high-pdd",
         icon: <FaExclamationCircle />,
       },
