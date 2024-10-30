@@ -13,6 +13,21 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
     "bg-indigo-100",
   ];
 
+  // Helper function to format "Results" values
+  const formatResultsValue = (value: string | number) => {
+    if (typeof value === "string") {
+      const match = value.match(/([a-zA-Z]+) \(([-\d.]+)\)/);
+      if (match) {
+        const [, prefix, numberString] = match;
+        const numValue = parseFloat(numberString);
+        const formattedNumber =
+          numValue % 1 === 0 ? numValue : numValue.toFixed(2);
+        return `${prefix} (${formattedNumber})`;
+      }
+    }
+    return value;
+  };
+
   if (!data || !Array.isArray(data)) {
     return <div>No data available</div>;
   }
@@ -45,10 +60,12 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
                 {Object.entries(row).map(([key, value], colIndex) => {
                   const isCodeFalse = codeValue === "False" && colIndex === 0;
 
-                  // Format ASR as a percentage
+                  // Format ASR as a percentage or Results as specified
                   const formattedValue =
                     key === "ASR"
                       ? `${Math.round((value as number) * 100)}%`
+                      : key === "Results"
+                      ? formatResultsValue(value)
                       : value;
 
                   return (
